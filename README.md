@@ -5,13 +5,40 @@ Keep your feed history to yourself and access your RSS and atom feeds from every
 You can access it through an easy to use webinterface on your desktop, your mobile browser
 or using one of available apps.
 
-## Instructions
+## Quickstart
+
+This section assumes you want to get started quickly, the following sections explain the
+steps in more detail. So let's start.
+
+Just start up a new database container:
 
 ```bash
-$ git clone https://github.com/clue/docker-ttrss.git
-$ cd docker-ttrss
-$ sudo docker build -t ttrss .
+$ DB=$(docker run -d nornagon/postgres)
 ```
+
+And because this docker image is available as a [trusted build on the docker index](https://index.docker.io/u/clue/ttrss/),
+using it is as simple as launching this Tiny Tiny RSS installation linked to your fresh database:
+
+```bash
+$ docker run -d --link $DB:db -p 80:80 clue/ttrss
+```
+
+Running this command for the first time will download the image automatically.
+
+## Accessing your webinterface
+
+The above example exposes the Tiny Tiny RSS webinterface on port 80, so that you can browse to:
+
+http://localhost/
+
+The default login credentials are:
+
+Username: admin
+Password: password
+
+Obviously, you're recommended to change those ASAP.
+
+## Installation Walkthrough
 
 ### Running
 
@@ -30,7 +57,6 @@ any, as long as is exposes its database port (5432) to the outside.
 Example:
 
 ```bash
-$ sudo docker pull nornagon/postgres
 $ sudo docker run -d --name=tinystore nornagon/postgres
 ```
 
@@ -41,7 +67,7 @@ This is particular useful for your initial database setup, as errors get reporte
 the console and further execution will halt.
 
 ```bash
-$ sudo docker run -it --link tinystore:db -p 80:80 ttrss
+$ sudo docker run -it --link tinystore:db -p 80:80 clue/ttrss
 ```
 
 ##### Database configuration
@@ -77,18 +103,5 @@ Remaining arguments can be passed just like before, the following is the recomme
 minimum:
 
 ```bash
-$ sudo docker run -d --link tinystore:db -p 80:80 ttrss
+$ sudo docker run -d --link tinystore:db -p 80:80 clue/ttrss
 ```
-
-### Accessing your webinterface
-
-The above examples expose the Tiny Tiny RSS webinterface on port 80, so that you can browse to:
-
-http://localhost/
-
-The default login credentials are:
-
-Username: admin
-Password: password
-
-Obviously, you're recommended to change those ASAP.
