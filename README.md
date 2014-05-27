@@ -4,6 +4,17 @@ This docker image allows you to run the [Tiny Tiny RSS](http://tt-rss.org) feed 
 Keep your feed history to yourself and access your RSS and atom feeds from everywhere.
 You can access it through an easy to use webinterface on your desktop, your mobile browser
 or using one of available apps.
+This is a [docker](https://www.docker.io) image that eases setup.
+
+## About Tiny Tiny RSS
+
+> *From [the official readme](http://tt-rss.org/redmine/projects/tt-rss/wiki):*
+
+Tiny Tiny RSS is an open source web-based news feed (RSS/Atom) reader and aggregator,
+designed to allow you to read news from any location,
+while feeling as close to a real desktop application as possible.
+
+![](http://tt-rss.org/images/1.9/1.jpg)
 
 ## Quickstart
 
