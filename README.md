@@ -24,14 +24,14 @@ steps in more detail. So let's start.
 Just start up a new database container:
 
 ```bash
-$ DB=$(docker run -d nornagon/postgres)
+$ docker run -d --name ttrssdb nornagon/postgres
 ```
 
 And because this docker image is available as a [trusted build on the docker index](https://index.docker.io/u/clue/ttrss/),
 using it is as simple as launching this Tiny Tiny RSS installation linked to your fresh database:
 
 ```bash
-$ docker run -d --link $DB:db -p 80:80 clue/ttrss
+$ docker run -d --link ttrssdb:db -p 80:80 clue/ttrss
 ```
 
 Running this command for the first time will download the image automatically.
@@ -68,7 +68,7 @@ any, as long as is exposes its database port (5432) to the outside.
 Example:
 
 ```bash
-$ sudo docker run -d --name=tinystore nornagon/postgres
+$ sudo docker run -d --name=ttrssdb nornagon/postgres
 ```
 
 #### Testing ttrss in foreground
@@ -78,7 +78,7 @@ This is particular useful for your initial database setup, as errors get reporte
 the console and further execution will halt.
 
 ```bash
-$ sudo docker run -it --link tinystore:db -p 80:80 clue/ttrss
+$ sudo docker run -it --link ttrssdb:db -p 80:80 clue/ttrss
 ```
 
 ##### Database configuration
