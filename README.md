@@ -44,12 +44,16 @@ http://localhost/
 
 The default login credentials are:
 
-Username: admin
-Password: password
+* Username: admin
+* Password: password
 
-Obviously, you're recommended to change those ASAP.
+Obviously, you're recommended to change these as soon as possible.
 
 ## Installation Walkthrough
+
+Having trouble getting the above to run?
+This is the detailed installation walkthrough.
+If you've already followed the [quickstart](#quickstart) guide and everything works, you can skip this part.
 
 ### Running
 
