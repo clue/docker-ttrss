@@ -110,6 +110,37 @@ following additional arguments:
 -e DB_ENV_PASS=docker
 ```
 
+#### Running with external database server
+
+If you already have a PostgreSQL or MySQL server around off docker you also can go with
+that.  Instead of linking docker containers you need to provide database hostname, port,
+database name and user credentials manually like so:
+
+```
+-e DB_HOST=172.17.42.1
+-e DB_PORT=3306
+-e DB_NAME=ttrss
+-e DB_USER=ttrssuser
+-e DB_PASS=ttrsspass
+```
+
+If your database is exposed on a non-standard port you also need to provide DB_TYPE set
+to either "pgsql" or "mysql".
+
+#### Running with mysql database server
+
+If you'd like to use ttrss with a mysql database backend, simply use the additional
+database configuration arguments to docker mentioned above.
+
+You also might want to link ttrss container to a mysql container.  If the mysql server
+is exposed on port 3306 it will be detected automatically, otherwise you need to specify
+DB_TYPE env flag.
+
+```bash
+$ sudo docker run -name mysql -d sameersbn/mysql:latest
+$ sudo docker run -it --link mysql:db -p 80:80 clue/ttrss
+```
+
 #### Running ttrss daemonized
 
 Once you've confirmed everything works in the foreground, you can start your container
