@@ -6,42 +6,38 @@ $confpath = '/var/www/config.php';
 
 $config = array();
 
-if(getenv($ename . '_TYPE') !== false) {
+if (getenv($ename . '_TYPE') !== false) {
     $config['DB_TYPE'] = getenv($ename . '_TYPE');
-}
-elseif(getenv($ename . '_PORT_5432_TCP_ADDR') !== false) {
+} elseif (getenv($ename . '_PORT_5432_TCP_ADDR') !== false) {
     // postgres container linked
     $config['DB_TYPE'] = 'pgsql';
     $eport = 5432;
-}
-elseif(getenv($ename . '_PORT_3306_TCP_ADDR') !== false) {
+} elseif (getenv($ename . '_PORT_3306_TCP_ADDR') !== false) {
     // mysql container linked
     $config['DB_TYPE'] = 'mysql';
     $eport = 3306;
 }
 
-if(!empty($eport)) {
+if (!empty($eport)) {
     $config['DB_HOST'] = env($ename . '_PORT_' . $eport . '_TCP_ADDR');
     $config['DB_PORT'] = env($ename . '_PORT_' . $eport . '_TCP_PORT');
-}
-elseif(getenv($ename . '_PORT') === false) {
-    error('The env ' . $ename .'_PORT does not exist. Make sure to run with "--link mypostgresinstance:' . $ename . '"');
-}
-elseif(is_numeric(getenv($ename . '_PORT')) && getenv($ename . '_HOST') !== false) {
+} elseif (getenv($ename . '_PORT') === false) {
+    error('The env ' . $ename . '_PORT does not exist. Make sure to run with "--link mypostgresinstance:' . $ename . '"');
+} elseif (is_numeric(getenv($ename . '_PORT')) && getenv($ename . '_HOST') !== false) {
     // numeric DB_PORT provided; assume port number passed directly
     $config['DB_HOST'] = env($ename . '_HOST');
     $config['DB_PORT'] = env($ename . '_PORT');
 
-    if(empty($config['DB_TYPE'])) {
-        switch($config['DB_PORT']) {
-        case 3306:
-            $config['DB_TYPE'] = 'mysql';
-            break;
-        case 5432:
-            $config['DB_TYPE'] = 'pgsql';
-            break;
-        default:
-            error('Database on non-standard port '.$config['DB_PORT'].' and env ' . $ename .'_TYPE not present');
+    if (empty($config['DB_TYPE'])) {
+        switch ($config['DB_PORT']) {
+            case 3306:
+                $config['DB_TYPE'] = 'mysql';
+                break;
+            case 5432:
+                $config['DB_TYPE'] = 'pgsql';
+                break;
+            default:
+                error('Database on non-standard port ' . $config['DB_PORT'] . ' and env ' . $ename . '_TYPE not present');
         }
     }
 }
@@ -68,11 +64,10 @@ if (!dbcheck($config)) {
     
     $pdo = dbconnect($super);
 
-    if($super['DB_TYPE'] == 'mysql') {
+    if ($super['DB_TYPE'] === 'mysql') {
         $pdo->exec('CREATE DATABASE ' . ($config['DB_NAME']));
         $pdo->exec('GRANT ALL PRIVILEGES ON ' . ($config['DB_NAME']) . '.* TO ' . $pdo->quote($config['DB_USER']) . '@"%" IDENTIFIED BY ' . $pdo->quote($config['DB_PASS']));
-    }
-    else {
+    } else {
         $pdo->exec('CREATE ROLE ' . ($config['DB_USER']) . ' WITH LOGIN PASSWORD ' . $pdo->quote($config['DB_PASS']));
         $pdo->exec('CREATE DATABASE ' . ($config['DB_NAME']) . ' WITH OWNER ' . ($config['DB_USER']));
     }
