@@ -1,10 +1,9 @@
 # docker-ttrss
 
-This docker image allows you to run the [Tiny Tiny RSS](http://tt-rss.org) feed reader.
+This [Docker](https://www.docker.com) image allows you to run the [Tiny Tiny RSS](http://tt-rss.org) feed reader.
 Keep your feed history to yourself and access your RSS and atom feeds from everywhere.
 You can access it through an easy to use webinterface on your desktop, your mobile browser
-or using one of available apps.
-This is a [docker](https://www.docker.io) image that eases setup.
+or using one of the available apps.
 
 ## About Tiny Tiny RSS
 
