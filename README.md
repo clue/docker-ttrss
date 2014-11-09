@@ -55,7 +55,9 @@ Having trouble getting the above to run?
 This is the detailed installation walkthrough.
 If you've already followed the [quickstart](#quickstart) guide and everything works, you can skip this part.
 
-### Running
+### Select database
+
+This container requires a PostgreSQL or MySQL database instance.
 
 Following docker's best practices, this container does not contain its own database,
 but instead expects you to supply a running instance. 
@@ -64,28 +66,55 @@ database instance and configuration you're relying on.
 Also, this makes this container quite disposable, as it doesn't store any sensitive
 information at all.
 
-#### Starting a database instance
+#### PostgreSQL container
 
-This container requires a PostgreSQL database instance. You're free to pick (or build)
-any, as long as is exposes its database port (5432) to the outside.
+The recommended way to run this container is by linking it to a PostgreSQL database instance.
+You're free to pick (or build) any PostgreSQL container, as long as it exposes
+its database port (5432) to the outside.
 
 Example:
 
 ```bash
-$ sudo docker run -d --name=ttrssdb nornagon/postgres
+$ docker run -d --name=tinydatabase nornagon/postgres:latest
 ```
 
-#### Testing ttrss in foreground
+Use the following database options when running the container:
 
-For testing purposes it's recommended to initially start this container in foreground.
-This is particular useful for your initial database setup, as errors get reported to
-the console and further execution will halt.
+```
+--link tinydatabase:db
+```
+
+#### MySQL container
+
+If you'd like to use ttrss with a mysql database backend, simply link it to a
+mysql container instead.
+You're free to pick (or build) any MySQL container, as long as it exposes
+its database port (3306) to the outside.
+
+Example:
 
 ```bash
-$ sudo docker run -it --link ttrssdb:db -p 80:80 clue/ttrss
+$ docker run -d --name=tinydatabase sameersbn/mysql:latest
 ```
 
-##### Database configuration
+Use the following database options when running the container:
+
+```
+--link tinydatabase:db
+```
+
+#### External database server
+
+If you already have a PostgreSQL or MySQL server around off docker you also can go with
+that.
+Instead of linking docker containers you need to provide database hostname and port like so:
+
+```
+-e DB_HOST=172.17.42.1
+-e DB_PORT=3306
+```
+
+### Database configuration
 
 Whenever your run ttrss, it will check your database setup. It assumes the following
 default configuration, which can be changed by passing the following additional arguments:
@@ -96,7 +125,15 @@ default configuration, which can be changed by passing the following additional 
 -e DB_PASS=ttrss
 ```
 
-##### Database superuser
+If your database is exposed on a non-standard port you also need to provide DB_TYPE set
+to either "pgsql" or "mysql".
+
+```
+-e DB_TYPE=pgsql
+-e DB_TYPE=mysql
+```
+
+### Database superuser
 
 When you run ttrss, it will check your database setup. If it can not connect using the above
 configuration, it will automatically try to create a new database and user.
@@ -110,38 +147,17 @@ following additional arguments:
 -e DB_ENV_PASS=docker
 ```
 
-#### Running with external database server
+### Testing ttrss in foreground
 
-If you already have a PostgreSQL or MySQL server around off docker you also can go with
-that.  Instead of linking docker containers you need to provide database hostname, port,
-database name and user credentials manually like so:
-
-```
--e DB_HOST=172.17.42.1
--e DB_PORT=3306
--e DB_NAME=ttrss
--e DB_USER=ttrssuser
--e DB_PASS=ttrsspass
-```
-
-If your database is exposed on a non-standard port you also need to provide DB_TYPE set
-to either "pgsql" or "mysql".
-
-#### Running with mysql database server
-
-If you'd like to use ttrss with a mysql database backend, simply use the additional
-database configuration arguments to docker mentioned above.
-
-You also might want to link ttrss container to a mysql container.  If the mysql server
-is exposed on port 3306 it will be detected automatically, otherwise you need to specify
-DB_TYPE env flag.
+For testing purposes it's recommended to initially start this container in foreground.
+This is particular useful for your initial database setup, as errors get reported to
+the console and further execution will halt.
 
 ```bash
-$ sudo docker run -name mysql -d sameersbn/mysql:latest
-$ sudo docker run -it --link mysql:db -p 80:80 clue/ttrss
+$ docker run -it --link tinydatabase:db -p 80:80 clue/ttrss
 ```
 
-#### Running ttrss daemonized
+### Running ttrss daemonized
 
 Once you've confirmed everything works in the foreground, you can start your container
 in the background by replacing the `-it` argument with `-d` (daemonize).
@@ -149,5 +165,5 @@ Remaining arguments can be passed just like before, the following is the recomme
 minimum:
 
 ```bash
-$ sudo docker run -d --link tinystore:db -p 80:80 clue/ttrss
+$ docker run -d --link tinydatabase:db -p 80:80 clue/ttrss
 ```
