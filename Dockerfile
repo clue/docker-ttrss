@@ -11,8 +11,8 @@ RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
 RUN rm /etc/nginx/sites-enabled/default
 
 # install ttrss and patch configuration
-RUN git clone https://github.com/gothfox/Tiny-Tiny-RSS.git /var/www
-WORKDIR /var/www
+RUN git clone https://github.com/gothfox/Tiny-Tiny-RSS.git /var/www/tt-rss
+WORKDIR /var/www/tt-rss
 RUN cp config.php-dist config.php
 RUN sed -i -e "/'SELF_URL_PATH'/s/ '.*'/ 'http:\/\/localhost\/'/" config.php
 RUN chown www-data:www-data -R /var/www
