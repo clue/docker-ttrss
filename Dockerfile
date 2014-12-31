@@ -5,6 +5,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
   nginx git supervisor php5-fpm php5-cli php5-curl php5-gd php5-json \
   php5-pgsql php5-mysql php5-mcrypt && apt-get clean
 
+# enable the mcrypt module
+RUN php5enmod mcrypt
+
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
 RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
