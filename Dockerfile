@@ -10,12 +10,25 @@ ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
 RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
 RUN rm /etc/nginx/sites-enabled/default
 
+ENV CODE_DIR /var/www
+
 # install ttrss and patch configuration
-RUN git clone https://github.com/gothfox/Tiny-Tiny-RSS.git /var/www
-WORKDIR /var/www
+RUN git clone https://github.com/gothfox/Tiny-Tiny-RSS.git $CODE_DIR
+WORKDIR $CODE_DIR
 RUN cp config.php-dist config.php
 RUN sed -i -e "/'SELF_URL_PATH'/s/ '.*'/ 'http:\/\/localhost\/'/" config.php
-RUN chown www-data:www-data -R /var/www
+RUN chown www-data:www-data -R $CODE_DIR
+
+# install feedly theme
+WORKDIR $CODE_DIR/themes
+RUN git clone https://github.com/levito/tt-rss-feedly-theme.git
+RUN ln -s tt-rss-feedly-theme/feedly.css
+RUN ln -s tt-rss-feedly-theme/feedly
+
+# install videoframes plugin
+WORKDIR $CODE_DIR/plugins
+RUN git clone https://github.com/tribut/ttrss-videoframes.git
+RUN ln -s ttrss-videoframes/videoframes
 
 # expose only nginx HTTP port
 EXPOSE 80
