@@ -152,6 +152,15 @@ following additional arguments:
 -e DB_ENV_PASS=docker
 ```
 
+### SELF_URL_PATH
+
+The `SELF_URL_PATH` config value can be set on runtime. This will enable PUSH
+and make the browser integration work. Default value: `http://localhost`.
+
+```
+-e SELF_URL_PATH=https://example.org/ttrss
+```
+
 ### Testing ttrss in foreground
 
 For testing purposes it's recommended to initially start this container in foreground.

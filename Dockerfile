@@ -17,11 +17,13 @@ RUN rm /etc/nginx/sites-enabled/default
 RUN git clone https://github.com/gothfox/Tiny-Tiny-RSS.git /var/www
 WORKDIR /var/www
 RUN cp config.php-dist config.php
-RUN sed -i -e "/'SELF_URL_PATH'/s/ '.*'/ 'http:\/\/localhost\/'/" config.php
 RUN chown www-data:www-data -R /var/www
 
 # expose only nginx HTTP port
 EXPOSE 80
+
+# complete path to ttrss
+ENV SELF_URL_PATH http://localhost
 
 # expose default database credentials via ENV in order to ease overwriting
 ENV DB_NAME ttrss
