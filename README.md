@@ -59,7 +59,7 @@ If you've already followed the [quickstart](#quickstart) guide and everything wo
 This container requires a PostgreSQL or MySQL database instance.
 
 Following docker's best practices, this container does not contain its own database,
-but instead expects you to supply a running instance. 
+but instead expects you to supply a running instance.
 While slightly more complicated at first, this gives your more freedom as to which
 database instance and configuration you're relying on.
 Also, this makes this container quite disposable, as it doesn't store any sensitive
