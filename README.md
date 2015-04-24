@@ -154,8 +154,11 @@ following additional arguments:
 
 ### SELF_URL_PATH
 
-The `SELF_URL_PATH` config value can be set on runtime. This will enable PUSH
-and make the browser integration work. Default value: `http://localhost`.
+The `SELF_URL_PATH` config value should be set to the URL where this TinyTinyRSS
+will be accessible at. Setting it correctly will enable PUSH support and make
+the browser integration work. Default value: `http://localhost`.
+
+For more information check out the [official documentation](https://github.com/gothfox/Tiny-Tiny-RSS/blob/master/config.php-dist#L22).
 
 ```
 -e SELF_URL_PATH=https://example.org/ttrss
