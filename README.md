@@ -59,7 +59,7 @@ If you've already followed the [quickstart](#quickstart) guide and everything wo
 This container requires a PostgreSQL or MySQL database instance.
 
 Following docker's best practices, this container does not contain its own database,
-but instead expects you to supply a running instance. 
+but instead expects you to supply a running instance.
 While slightly more complicated at first, this gives your more freedom as to which
 database instance and configuration you're relying on.
 Also, this makes this container quite disposable, as it doesn't store any sensitive
@@ -150,6 +150,18 @@ following additional arguments:
 ```
 -e DB_ENV_USER=docker
 -e DB_ENV_PASS=docker
+```
+
+### SELF_URL_PATH
+
+The `SELF_URL_PATH` config value should be set to the URL where this TinyTinyRSS
+will be accessible at. Setting it correctly will enable PUSH support and make
+the browser integration work. Default value: `http://localhost`.
+
+For more information check out the [official documentation](https://github.com/gothfox/Tiny-Tiny-RSS/blob/master/config.php-dist#L22).
+
+```
+-e SELF_URL_PATH=https://example.org/ttrss
 ```
 
 ### Testing ttrss in foreground
