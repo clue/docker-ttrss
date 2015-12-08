@@ -8,6 +8,9 @@ $config = array();
 // path to ttrss
 $config['SELF_URL_PATH'] = env('SELF_URL_PATH', 'http://localhost');
 
+// Default plugins
+$config['PLUGINS']=env('PLUGINS','auth_internal, auth_remote, note');
+
 if (getenv('DB_TYPE') !== false) {
     $config['DB_TYPE'] = getenv('DB_TYPE');
 } elseif (getenv('DB_PORT_5432_TCP_ADDR') !== false) {
