@@ -101,10 +101,6 @@ catch (PDOException $e) {
 }
 
 $contents = file_get_contents($confpath);
-foreach ($config as $name => $value) {
-    $contents = preg_replace('/(define\s*\(\'' . $name . '\',\s*)(.*)(\);)/', '$1"' . $value . '"$3', $contents);
-}
-
 if(getenv('AUTH_METHOD') == "ldap") {
     $config['PLUGINS'] = 'auth_ldap, note';
     $contents .= "define('LDAP_AUTH_SERVER_URI', '" . env("LDAP_AUTH_SERVER_URI", "ldap://ldap") . "');\n";
@@ -119,6 +115,9 @@ if(getenv('AUTH_METHOD') == "ldap") {
     $contents .= "define('LDAP_AUTH_LOGIN_ATTRIB', '" . env("LDAP_AUTH_LOGIN_ATTRIB", "sAMAccountName") . "');\n";
     $contents .= "define('LDAP_AUTH_LOG_ATTEMPTS', " . env("LDAP_AUTH_LOG_ATTEMPTS", "FALSE") . ");\n";
     $contents .= "define('LDAP_AUTH_DEBUG', " . env("LDAP_AUTH_DEBUG", "FALSE") . ");\n";
+}
+foreach ($config as $name => $value) {
+    $contents = preg_replace('/(define\s*\(\'' . $name . '\',\s*)(.*)(\);)/', '$1"' . $value . '"$3', $contents);
 }
 
 file_put_contents($confpath, $contents);
