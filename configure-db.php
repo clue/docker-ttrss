@@ -111,7 +111,7 @@ if(getenv('AUTH_METHOD') == "ldap") {
     $contents .= "define('LDAP_AUTH_USETLS', " . env("LDAP_AUTH_USETLS", "FALSE") . "); \n";
     $contents .= "define('LDAP_AUTH_ALLOW_UNTRUSTED_CERT', " . env("LDAP_AUTH_ALLOW_UNTRUSTED_CERT", "TRUE") . ");\n";
     $contents .= "define('LDAP_AUTH_BASEDN', '" . env("LDAP_AUTH_BASEDN") . "');\n";
-    $contents .= "define('LDAP_AUTH_ANONYMOUSBEFOREBIND', " . env("LDAP_AUTH_ANONYMOUSBEFOREBIND", "FALSE") . ";\n";
+    $contents .= "define('LDAP_AUTH_ANONYMOUSBEFOREBIND', " . env("LDAP_AUTH_ANONYMOUSBEFOREBIND", "FALSE") . ");\n";
     // ??? will be replaced with the entered username(escaped) at login 
     $contents .= "define('LDAP_AUTH_SEARCHFILTER', '" .env("LDAP_AUTH_SEARCHFILTER", "(&(objectClass=user)(sAMAccountName=???))") . "');\n";
     $contents .= "define('LDAP_AUTH_BINDDN', '" . env("LDAP_AUTH_BINDDN") . "');\n";
