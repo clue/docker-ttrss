@@ -104,6 +104,23 @@ $contents = file_get_contents($confpath);
 foreach ($config as $name => $value) {
     $contents = preg_replace('/(define\s*\(\'' . $name . '\',\s*)(.*)(\);)/', '$1"' . $value . '"$3', $contents);
 }
+
+if(getenv('AUTH_METHOD') == "ldap") {
+    $config['PLUGINS'] = 'auth_ldap, note';
+    $contents .= "define('LDAP_AUTH_SERVER_URI', '" . env("LDAP_AUTH_SERVER_URI", "ldap://ldap") . "');\n";
+    $contents .= "define('LDAP_AUTH_USETLS', " . env("LDAP_AUTH_USETLS", "FALSE") . "); \n";
+    $contents .= "define('LDAP_AUTH_ALLOW_UNTRUSTED_CERT', " . env("LDAP_AUTH_ALLOW_UNTRUSTED_CERT", "TRUE") . ");\n";
+    $contents .= "define('LDAP_AUTH_BASEDN', '" . env("LDAP_AUTH_BASEDN") . "');\n";
+    $contents .= "define('LDAP_AUTH_ANONYMOUSBEFOREBIND', " . env("LDAP_AUTH_ANONYMOUSBEFOREBIND", "FALSE") . ";\n";
+    // ??? will be replaced with the entered username(escaped) at login 
+    $contents .= "define('LDAP_AUTH_SEARCHFILTER', '" .env("LDAP_AUTH_SEARCHFILTER", "(&(objectClass=user)(sAMAccountName=???))") . "');\n";
+    $contents .= "define('LDAP_AUTH_BINDDN', '" . env("LDAP_AUTH_BINDDN") . "');\n";
+    $contents .= "define('LDAP_AUTH_BINDPW', '" . env("LDAP_AUTH_BINDPW") . "');\n";
+    $contents .= "define('LDAP_AUTH_LOGIN_ATTRIB', '" . env("LDAP_AUTH_LOGIN_ATTRIB", "sAMAccountName") . "');\n";
+    $contents .= "define('LDAP_AUTH_LOG_ATTEMPTS', " . env("LDAP_AUTH_LOG_ATTEMPTS", "FALSE") . ");\n";
+    $contents .= "define('LDAP_AUTH_DEBUG', " . env("LDAP_AUTH_DEBUG", "FALSE") . ");\n";
+}
+
 file_put_contents($confpath, $contents);
 
 function env($name, $default = null)
