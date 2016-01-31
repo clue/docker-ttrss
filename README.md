@@ -164,6 +164,32 @@ For more information check out the [official documentation](https://github.com/g
 -e SELF_URL_PATH=https://example.org/ttrss
 ```
 
+### Authentication
+
+This container supports internal and ldap by setting `AUTH_METHOD` to `internal` or `ldap`. Default is `internal`.
+
+```
+-e AUTH_METHOD=internal
+```
+
+### LDAP
+
+If `AUTH_METHOD` is set to `ldap` you must/can set the following variables:
+
+- `LDAP_AUTH_SERVER_URI`. Default is `ldap://ldap`
+- `LDAP_AUTH_USETLS`. Default is `FALSE`
+- `LDAP_AUTH_ALLOW_UNTRUSTED_CERT`. Default is `TRUE`
+- `LDAP_AUTH_BASEDN`. Require
+- `LDAP_AUTH_ANONYMOUSBEFOREBIND`. Default `FALSE`
+- `LDAP_AUTH_SEARCHFILTER`. `???` is replaced by the login name. Default `(&(objectClass=user)(sAMAccountName=???))`
+- `LDAP_AUTH_BINDDN`. Required
+- `LDAP_AUTH_BINDPW`. Required
+- `LDAP_AUTH_LOGIN_ATTRIB`. Default is `sAMAccountName`
+- `LDAP_AUTH_LOG_ATTEMPTS`. Default is `FALSE`
+- `LDAP_AUTH_DEBUG`. Default is `FALSE`
+
+For more information consult https://github.com/hydrian/TTRSS-Auth-LDAP
+
 ### Testing ttrss in foreground
 
 For testing purposes it's recommended to initially start this container in foreground.
