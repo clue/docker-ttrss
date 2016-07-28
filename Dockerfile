@@ -1,7 +1,7 @@
 FROM alpine:3.4
 MAINTAINER Christian Lück <christian@lueck.tv>
 
-RUN apk add --update nginx supervisor php5-fpm php5-cli php5-curl php5-gd php5-json php5-dom php5-pcntl php5-posix \
+RUN apk add --update nginx s6 php5-fpm php5-cli php5-curl php5-gd php5-json php5-dom php5-pcntl php5-posix \
   php5-pgsql php5-mysql php5-mcrypt php5-pdo php5-pdo_pgsql php5-pdo_mysql ca-certificates && \
   rm -rf /var/cache/apk/*
 
@@ -30,5 +30,5 @@ ENV DB_PASS ttrss
 
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD php /configure-db.php && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+ADD s6/ /etc/s6/
+CMD php /configure-db.php && s6-svscan /etc/s6/
