@@ -1,25 +1,21 @@
-FROM ubuntu
+FROM alpine:3.4
 MAINTAINER Christian Lück <christian@lueck.tv>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx supervisor php5-fpm php5-cli php5-curl php5-gd php5-json \
-  php5-pgsql php5-mysql php5-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# enable the mcrypt module
-RUN php5enmod mcrypt
+RUN apk add --update nginx supervisor php5-fpm php5-cli php5-curl php5-gd php5-json php5-dom php5-pcntl php5-posix \
+  php5-pgsql php5-mysql php5-mcrypt php5-pdo php5-pdo_pgsql php5-pdo_mysql ca-certificates && \
+  rm -rf /var/cache/apk/*
 
 # add ttrss as the only nginx site
-ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
-RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
-RUN rm /etc/nginx/sites-enabled/default
+ADD ttrss.nginx.conf /etc/nginx/nginx.conf
 
 # install ttrss and patch configuration
 WORKDIR /var/www
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/* \
+RUN apk add --update --virtual build-dependencies curl tar \
     && curl -SL https://tt-rss.org/gitlab/fox/tt-rss/repository/archive.tar.gz?ref=master | tar xzC /var/www --strip-components 1 \
-    && apt-get purge -y --auto-remove curl \
-    && chown www-data:www-data -R /var/www
-RUN cp config.php-dist config.php
+    && apk del build-dependencies \
+    && rm -rf /var/cache/apk/* \
+    && cp config.php-dist config.php \
+    && chown nobody:nginx -R /var/www
 
 # expose only nginx HTTP port
 EXPOSE 80
