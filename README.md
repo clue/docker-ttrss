@@ -164,6 +164,18 @@ For more information check out the [official documentation](https://github.com/g
 -e SELF_URL_PATH=https://example.org/ttrss
 ```
 
+### Additional configuration
+
+In addition to the environement variables above, it is possible to override any value in the `config.php`
+by using another environment variable. Prefix the config value you want to override with `CONFIG_`
+and it will replace the default value on container creation.
+
+For example, to add the `auth_external` plugin, set the following variable:
+
+```
+-e CONFIG_PLUGINS='auth_internal, note, auth_external'
+```
+
 ### Testing ttrss in foreground
 
 For testing purposes it's recommended to initially start this container in foreground.

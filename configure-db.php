@@ -63,7 +63,7 @@ if (!dbcheck($config)) {
     $super['DB_NAME'] = null;
     $super['DB_USER'] = env('DB_ENV_USER', 'docker');
     $super['DB_PASS'] = env('DB_ENV_PASS', $super['DB_USER']);
-    
+
     $pdo = dbconnect($super);
 
     if ($super['DB_TYPE'] === 'mysql') {
@@ -75,7 +75,7 @@ if (!dbcheck($config)) {
     }
 
     unset($pdo);
-    
+
     if (dbcheck($config)) {
         echo 'Database login created and confirmed' . PHP_EOL;
     } else {
@@ -100,6 +100,15 @@ catch (PDOException $e) {
     unset($pdo);
 }
 
+$config_prefix = 'CONFIG_';
+foreach ($_SERVER as $name => $value) {
+    if (strpos($name, $config_prefix) === 0) {
+        $name = substr($name, strlen($config_prefix));
+        echo 'Getting config from env: ' . $name . PHP_EOL;
+        $config[$name] = $value;
+    }
+}
+
 $contents = file_get_contents($confpath);
 foreach ($config as $name => $value) {
     $contents = preg_replace('/(define\s*\(\'' . $name . '\',\s*)(.*)(\);)/', '$1"' . $value . '"$3', $contents);
@@ -109,11 +118,11 @@ file_put_contents($confpath, $contents);
 function env($name, $default = null)
 {
     $v = getenv($name) ?: $default;
-    
+
     if ($v === null) {
         error('The env ' . $name . ' does not exist');
     }
-    
+
     return $v;
 }
 
