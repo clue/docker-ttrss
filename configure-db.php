@@ -106,6 +106,34 @@ foreach ($config as $name => $value) {
 }
 file_put_contents($confpath, $contents);
 
+$urlParts = parse_url($config['SELF_URL_PATH']);
+if( $urlParts['path'] != '' && $urlParts['path'] != '/' ) {
+    $nginx = 'server {
+    listen 80;
+
+    index index.php index.html;
+    
+    location / {
+        rewrite ^ ' . $config['SELF_URL_PATH'] . ';
+    }
+
+    location ' . rtrim($urlParts['path'], '/') . ' {
+        alias /var/www;
+        try_files $uri $uri/ =404;
+
+        location ~ \.php$ {
+            allow all;
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index index.php;
+            include fastcgi_params;
+        }
+    }
+}';
+
+    file_put_contents("/etc/nginx/sites-enabled/ttrss", $nginx);
+}
+
 function env($name, $default = null)
 {
     $v = getenv($name) ?: $default;
