@@ -9,10 +9,10 @@ ROOT_PATH=${SELF_URL_PATH/#http*\:\/\/*\//}
 if [ "${ROOT_PATH}" == "${SELF_URL_PATH}" ]; then
     # no root path in SELF_URL_PATH.
     mkdir -p /var/tmp
-    ln -s "/var/www" "/var/tmp/www"
+    ln -sf "/var/www" "/var/tmp/www"
 else
     mkdir -p /var/tmp/www
-    ln -s "/var/www" "/var/tmp/www/${ROOT_PATH}"
+    ln -sf "/var/www" "/var/tmp/www/${ROOT_PATH}"
 fi
 
 php /configure-db.php
