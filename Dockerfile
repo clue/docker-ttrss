@@ -42,4 +42,5 @@ ENV AUTH_METHOD internal
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD php /configure-db.php && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+ADD entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
