@@ -1,9 +1,9 @@
-FROM ubuntu
+FROM ubuntu:14.04
 MAINTAINER Christian Lück <christian@lueck.tv>
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx supervisor php5-fpm php5-cli php5-curl php5-gd php5-json \
-  php5-pgsql php5-mysql php5-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
+  git nginx supervisor php5-fpm php5-cli php5-curl php5-gd php5-json \
+  php5-pgsql php5-ldap php5-mysql php5-mcrypt && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # enable the mcrypt module
 RUN php5enmod mcrypt
@@ -19,6 +19,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl --n
     && curl -SL https://tt-rss.org/gitlab/fox/tt-rss/repository/archive.tar.gz?ref=master | tar xzC /var/www --strip-components 1 \
     && apt-get purge -y --auto-remove curl \
     && chown www-data:www-data -R /var/www
+
+RUN git clone https://github.com/hydrian/TTRSS-Auth-LDAP.git /TTRSS-Auth-LDAP && \
+    cp -r /TTRSS-Auth-LDAP/plugins/auth_ldap plugins/ && \
+    ls -la /var/www/plugins
 RUN cp config.php-dist config.php
 
 # expose only nginx HTTP port
@@ -32,7 +36,11 @@ ENV DB_NAME ttrss
 ENV DB_USER ttrss
 ENV DB_PASS ttrss
 
+# auth method, options are: internal, ldap
+ENV AUTH_METHOD internal
+
 # always re-configure database with current ENV when RUNning container, then monitor all services
 ADD configure-db.php /configure-db.php
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD php /configure-db.php && supervisord -c /etc/supervisor/conf.d/supervisord.conf
+ADD entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
