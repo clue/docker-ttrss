@@ -6,22 +6,19 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
   php-pgsql php-mysql php-mcrypt php-mbstring php-xml && apt-get clean && rm -rf /var/lib/apt/lists/* && \
   phpenmod mcrypt && mkdir /run/php
 
-# enable the mcrypt module
-RUN phpenmod mcrypt
-
 
 # add ttrss as the only nginx site
 ADD ttrss.nginx.conf /etc/nginx/sites-available/ttrss
-RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss
-RUN rm /etc/nginx/sites-enabled/default
+RUN ln -s /etc/nginx/sites-available/ttrss /etc/nginx/sites-enabled/ttrss \
+    && rm /etc/nginx/sites-enabled/default
 
 # install ttrss and patch configuration
 WORKDIR /var/www
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/* \
     && curl -SL https://tt-rss.org/gitlab/fox/tt-rss/repository/archive.tar.gz?ref=master | tar xzC /var/www --strip-components 1 \
     && apt-get purge -y --auto-remove curl \
-    && chown www-data:www-data -R /var/www
-RUN cp config.php-dist config.php
+    && chown www-data:www-data -R /var/www \
+    && cp config.php-dist config.php
 
 # expose only nginx HTTP port
 EXPOSE 80
